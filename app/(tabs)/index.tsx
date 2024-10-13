@@ -4,9 +4,12 @@ import { HelloWave } from '@/components/HelloWave';
 import ParallaxScrollView from '@/components/ParallaxScrollView';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
+import { useNavigation } from '@react-navigation/native';
+
 
 
 export default function HomeScreen() {
+  const navigation = useNavigation();
   return (
     <ParallaxScrollView
       headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
@@ -40,7 +43,7 @@ export default function HomeScreen() {
           Begin acing your tests 📝, getting a girlfriend 👩‍❤️‍👨, building muscle 🏋️, and do much more!
         </ThemedText>
         <TouchableOpacity
-          onPress={() => Alert.alert('Simple Button pressed')}
+          onPress={() => null}
           style={styles.reactButton}
         >
           <Text style={styles.buttonText}>Get Started</Text>

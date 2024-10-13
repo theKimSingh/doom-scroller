@@ -1,77 +1,68 @@
-import React, { useRef, useState } from 'react';
-import { FlatList, View, StyleSheet, Dimensions } from 'react-native';
-import { WebView } from 'react-native-webview';
-import Video from 'react-native-video';
+import { useVideoPlayer, VideoView } from 'expo-video';
+import { useEffect, useRef, useState } from 'react';
+import { PixelRatio, StyleSheet, View, Button } from 'react-native';
 
-const { height } = Dimensions.get('window');
 
-const videos = [
-  { id: '1', url: 'https://www.w3schools.com/html/mov_bbb.mp4' },
-  { id: '2', url: 'https://www.w3schools.com/html/movie.mp4' },
-  { id: '3', url: 'https://www.w3schools.com/html/mov_bbb.mp4' },
-];
 
-interface VideoItemProps {
-  url: string;
-  isActive: boolean;
-}
+export default function VideoScreen(videoSources: Array<string>) {
+  const ref = useRef(null);
+  const [isPlaying, setIsPlaying] = useState(true);
+  const player = useVideoPlayer(videoSources, player => {
+    player.loop = true;
+    player.play();
+  });
 
-const VideoItem: React.FC<VideoItemProps> = ({ url, isActive }) => {
+  useEffect(() => {
+    const subscription = player.addListener('playingChange', isPlaying => {
+      setIsPlaying(isPlaying);
+    });
 
-  const videoRef = useRef(null);
+    return () => {
+      subscription.remove();
+    };
+  }, [player]);
 
   return (
-    <View style={styles.videoContainer}>
-      <Video
-        ref={videoRef}
-        source={{ uri: url }}
-        style={styles.backgroundVideo}
-        resizeMode="cover"
-        repeat
-        paused={!isActive}
-        onError={(e) => console.log('Video error:', e)}
+    <View style={styles.contentContainer}>
+      <VideoView
+        ref={ref}
+        style={styles.video}
+        player={player}
+        allowsFullscreen
+        allowsPictureInPicture
       />
+      <View style={styles.controlsContainer}>
+        {/* <Button
+          title={isPlaying ? 'Pause' : 'Play'}
+          onPress={() => {
+            if (isPlaying) {
+              player.pause();
+            } else {
+              player.play();
+            }
+            setIsPlaying(!isPlaying);
+          }}
+        /> */}
+      </View>
     </View>
   );
-};
-
-const VideoScroller = () => {
-  const [activeIndex, setActiveIndex] = useState(0);
-  const onViewableItemsChanged = useRef(({ viewableItems }: { viewableItems: Array<{ index: number | null }> }) => {
-    if (viewableItems.length > 0 && viewableItems[0].index !== null) {
-      setActiveIndex(viewableItems[0].index);
-    }
-  });
-
-  const viewabilityConfig = useRef({
-    itemVisiblePercentThreshold: 80, // Video is considered "viewable" if 80% is visible
-  });
-
-  return (
-    <FlatList
-      data={videos}
-      renderItem={({ item, index }) => (
-        <VideoItem url={item.url} isActive={index === activeIndex} />
-      )}
-      keyExtractor={(item) => item.id}
-      pagingEnabled
-      showsVerticalScrollIndicator={false}
-      onViewableItemsChanged={onViewableItemsChanged.current}
-      viewabilityConfig={viewabilityConfig.current}
-    />
-  );
-};
+}
 
 const styles = StyleSheet.create({
-  videoContainer: {
-    height: height,
-    justifyContent: 'center',
+  contentContainer: {
+    flex: 1,
+    padding: 10,
     alignItems: 'center',
+    justifyContent: 'center',
+    paddingHorizontal: 50,
   },
-  backgroundVideo: {
-    height: '100%',
-    width: '100%',
+  video: {
+    width: 1080,
+    height: 1920,
+    aspectRatio: (9/16), 
+    overflow: "hidden"
+  },
+  controlsContainer: {
+    padding: 0,
   },
 });
-
-export default VideoScroller;
