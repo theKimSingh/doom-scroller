@@ -10,7 +10,13 @@ const videos = [
   { id: '3', url: 'https://www.w3schools.com/html/mov_bbb.mp4' },
 ];
 
-const VideoItem = ({ url, isActive: }) => {
+interface VideoItemProps {
+  url: string;
+  isActive: boolean;
+}
+
+const VideoItem: React.FC<VideoItemProps> = ({ url, isActive }) => {
+
   const videoRef = useRef(null);
 
   return (
@@ -30,8 +36,8 @@ const VideoItem = ({ url, isActive: }) => {
 
 const VideoScroller = () => {
   const [activeIndex, setActiveIndex] = useState(0);
-  const onViewableItemsChanged = useRef(({ viewableItems }) => {
-    if (viewableItems.length > 0) {
+  const onViewableItemsChanged = useRef(({ viewableItems }: { viewableItems: Array<{ index: number | null }> }) => {
+    if (viewableItems.length > 0 && viewableItems[0].index !== null) {
       setActiveIndex(viewableItems[0].index);
     }
   });
