@@ -1,9 +1,10 @@
-import { Image, StyleSheet, Platform } from 'react-native';
+import { Image, StyleSheet, Platform, Button, Alert,TouchableOpacity, Text } from 'react-native';
 
 import { HelloWave } from '@/components/HelloWave';
 import ParallaxScrollView from '@/components/ParallaxScrollView';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
+
 
 export default function HomeScreen() {
   return (
@@ -22,7 +23,7 @@ export default function HomeScreen() {
       <ThemedView style={styles.stepContainer}>
         <ThemedText type="subtitle">Step 1: Try it 📲</ThemedText>
         <ThemedText>
-          Click on <ThemedText type="defaultSemiBold">Explore</ThemedText> to load 
+          Click on <ThemedText type="defaultSemiBold">Explore</ThemedText> to load
           some lectures, and explore our app.
         </ThemedText>
       </ThemedView>
@@ -30,7 +31,7 @@ export default function HomeScreen() {
         <ThemedText type="subtitle">Step 2: Answer ✅</ThemedText>
         <ThemedText>
           Answer the our handcrafted <ThemedText type="defaultSemiBold">quiz sections </ThemedText>
-           that come after the videos.
+          that come after the videos.
         </ThemedText>
       </ThemedView>
       <ThemedView style={styles.stepContainer}>
@@ -38,6 +39,12 @@ export default function HomeScreen() {
         <ThemedText>
           Begin acing your tests 📝, getting a girlfriend 👩‍❤️‍👨, building muscle 🏋️, and do much more!
         </ThemedText>
+        <TouchableOpacity
+          onPress={() => Alert.alert('Simple Button pressed')}
+          style={styles.reactButton}
+        >
+          <Text style={styles.buttonText}>Get Started</Text>
+        </TouchableOpacity>
       </ThemedView>
     </ParallaxScrollView>
   );
@@ -59,5 +66,19 @@ const styles = StyleSheet.create({
     bottom: 0,
     left: 0,
     position: 'absolute',
+  },
+  reactButton: {
+    width: '100%',
+    position: 'relative',
+    borderRadius: 10,
+    backgroundColor: '#000',
+    marginTop: "5%",
+    height: 50, // Set a specific height instead of 100%
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  buttonText: {
+    color: '#ffffff',
+    fontSize: 16,
   },
 });
