@@ -5,9 +5,14 @@ import { ExternalLink } from '@/components/ExternalLink';
 import ParallaxScrollView from '@/components/ParallaxScrollView';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
+import VideoScreen from './video';
+import VideoScreens from './videos';
 
 export default function TabTwoScreen() {
   const classes = ["cse331", "cse446"]
+  const link = 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4'
+  const links = ['https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4','https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4','https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4']
+  
   return (
     <ParallaxScrollView
       headerBackgroundColor={{ light: '#D0D0D0', dark: '#353636' }}
@@ -22,7 +27,7 @@ export default function TabTwoScreen() {
       {classes.map((item, index) => (
         <TouchableOpacity
           key={index} // Always provide a unique key for list items
-          onPress={() => Alert.alert('Simple Button pressed')}
+          onPress={() => VideoScreens(link)}
           style={styles.reactButton}
         >
           <Text style={styles.buttonText}>{item}</Text>
