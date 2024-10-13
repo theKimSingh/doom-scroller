@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useRef, useState } from 'react';
 import { FlatList, View, StyleSheet, Dimensions } from 'react-native';
 import { WebView } from 'react-native-webview';
+import Video from 'react-native-video';
 
 const { height } = Dimensions.get('window');
 
