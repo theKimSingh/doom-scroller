@@ -1,75 +1,50 @@
-import React, { useState, useRef } from 'react';
-import { View, FlatList, Dimensions, StyleSheet } from 'react-native';
-import Video from 'react-native-video';
+import React from 'react';
+import { FlatList, View, StyleSheet, Dimensions } from 'react-native';
+import { WebView } from 'react-native-webview';
 
-const { height } = Dimensions.get('window');
+const { width } = Dimensions.get('window');
 
 const videos = [
-  { id: '1', url: 'https://www.w3schools.com/html/mov_bbb.mp4' },
-  { id: '2', url: 'https://www.w3schools.com/html/movie.mp4' },
-  { id: '3', url: 'https://www.w3schools.com/html/mov_bbb.mp4' },
+  { id: '1', uri: 'https://www.youtube.com/embed/dQw4w9WgXcQ' }, // Example YouTube video URL
+  { id: '2', uri: 'https://www.youtube.com/embed/VIDEO_ID_2' }, // Replace with actual video IDs
+  { id: '3', uri: 'https://www.youtube.com/embed/VIDEO_ID_3' },
+  // Add more YouTube video IDs
 ];
 
-interface VideoItemProps {
-  url: string;
-  isActive: boolean;
-}
-
-const VideoItem: React.FC<VideoItemProps> = ({ url, isActive }) => {
-
-  const videoRef = useRef(null);
-
-  return (
+const VideoScroller = () => {
+  const renderItem = ({ item }: { item: { id: string; uri: string } }) => (
     <View style={styles.videoContainer}>
-      <Video
-        ref={videoRef}
-        source={{ uri: url }}
-        style={styles.backgroundVideo}
-        resizeMode="cover"
-        repeat
-        paused={!isActive}
-        onError={(e) => console.log('Video error:', e)}
+      <WebView
+        source={{ uri: item.uri }}
+        style={styles.video}
+        javaScriptEnabled={true}
+        domStorageEnabled={true}
+        allowsInlineMediaPlayback={true}
+        mediaPlaybackRequiresUserAction={false} // Allow autoplay
       />
     </View>
   );
-};
-
-const VideoScroller = () => {
-  const [activeIndex, setActiveIndex] = useState(0);
-  const onViewableItemsChanged = useRef(({ viewableItems }: { viewableItems: Array<{ index: number | null }> }) => {
-    if (viewableItems.length > 0 && viewableItems[0].index !== null) {
-      setActiveIndex(viewableItems[0].index);
-    }
-  });
-
-  const viewabilityConfig = useRef({
-    itemVisiblePercentThreshold: 80, // Video is considered "viewable" if 80% is visible
-  });
 
   return (
     <FlatList
       data={videos}
-      renderItem={({ item, index }) => (
-        <VideoItem url={item.url} isActive={index === activeIndex} />
-      )}
-      keyExtractor={(item) => item.id}
-      pagingEnabled
-      showsVerticalScrollIndicator={false}
-      onViewableItemsChanged={onViewableItemsChanged.current}
-      viewabilityConfig={viewabilityConfig.current}
+      renderItem={renderItem}
+      keyExtractor={item => item.id}
+      horizontal // Enable horizontal scrolling
+      pagingEnabled // Snap to each video
+      showsHorizontalScrollIndicator={false}
     />
   );
 };
 
 const styles = StyleSheet.create({
   videoContainer: {
-    height: height,
-    justifyContent: 'center',
-    alignItems: 'center',
+    width: width, // Full screen width for each video
+    height: 250, // Adjust the height as needed
   },
-  backgroundVideo: {
-    height: '100%',
+  video: {
     width: '100%',
+    height: '100%',
   },
 });
 
